@@ -1,4 +1,20 @@
-class Grades:
+class GradesCompare:
+    '''
+    Все-таки тронул немного класс Student. Вынес инициализацию словаря оценок и функцию определения средней оценки,
+    т.к. они идентичны у студентов и у лекторов.
+
+    Теперь этот класс GradesCompare - родительский для студентов и лекторов, хранит в себе функции сравнения, рассчет
+    средней оценки и инициализацию словаря оценок.
+    '''
+    def __init__(self, *args):
+        self.grades = {}
+
+    def __eq__(self, other):
+        return self.avg_grade() == other.avg_grade()
+
+    def __ne__(self, other):
+        return self.avg_grade() != other.avg_grade()
+
     def __gt__(self, other):
         return self.avg_grade() > other.avg_grade()
 
@@ -9,17 +25,7 @@ class Grades:
         return self.avg_grade() >= other.avg_grade()
 
     def __le__(self, other):
-        self.avg_grade() <= other.avg_grade()
-
-
-class Student(Grades):
-    def __init__(self, name, surname, gender):
-        self.name = name
-        self.surname = surname
-        self.gender = gender
-        self.finished_courses = []
-        self.courses_in_progress = []
-        self.grades = {}
+        return self.avg_grade() <= other.avg_grade()
 
     def avg_grade(self):
         avg = 0
@@ -27,6 +33,16 @@ class Student(Grades):
             if len(grade_list) > 0:
                 avg += sum(grade_list) / len(grade_list)
         return avg
+
+
+class Student(GradesCompare):
+    def __init__(self, name, surname, gender):
+        self.name = name
+        self.surname = surname
+        self.gender = gender
+        self.finished_courses = []
+        self.courses_in_progress = []
+        GradesCompare.__init__(self)
 
     def __str__(self):
         courses_in_progress_string = ' ,'.join(self.courses_in_progress)
@@ -55,11 +71,11 @@ class Mentor:
 
 
 
-class Lecturer(Grades, Mentor):
+class Lecturer(GradesCompare, Mentor):
     def __init__(self, *args):
-        self.grades = {}
-        super(Lecturer, self).__init__(*args)
-        pass
+        GradesCompare.__init__(self)
+        Mentor.__init__(self, *args)
+
 
     def __cmp__(self, other):
         if isinstance(other, Lecturer):
@@ -67,18 +83,11 @@ class Lecturer(Grades, Mentor):
         else:
             return None
 
-    def avg_grade(self):
-        avg = 0
-        for grade, grade_list in self.grades.items():
-            if len(grade_list) > 0:
-                avg += sum(grade_list) / len(grade_list)
-        return avg
 
     def __str__(self):
         return f'Имя: {self.name}\n' \
                f'Фамилия: {self.surname}\n' \
                f'Средняя оценка за лекции {self.avg_grade()}'
-
 
 
 class Reviewer(Mentor):
@@ -91,7 +100,23 @@ class Reviewer(Mentor):
         else:
             return 'Ошибка'
 
+        def __str__(self):
+            return f'Имя: {self.name}\n' \
+                   f'Фамилия: {self.surname}\n'
 
+
+def avg_grade_by_course(person_list, course):
+    '''
+    Так как структура словаря с оценками у лекторов и у студентов одинакова, решил сделать одну функцию
+    '''
+    grades_list = []
+    for person in person_list:
+        if course in person.grades:
+            grades_list += person.grades[course]
+    if len(grades_list) > 0:
+        return sum(grades_list) / len(grades_list)
+    else:
+        return 0
 
 best_student = Student('Ruoy', 'Eman', 'your_gender')
 best_student.courses_in_progress += ['Python']
@@ -103,22 +128,26 @@ cool_mentor = Reviewer('Some', 'Buddy')
 cool_mentor.courses_attached += ['Python']
 
 cool_lecturer = Lecturer('Another', 'Buddy')
-cool_lecturer.courses_attached += ['Python']
+cool_lecturer.courses_attached += ['Python', 'Java']
+
+cool_lecturer1 = Lecturer('Ash', 'Williams')
+cool_lecturer1.courses_attached += ['Python', 'How to beat evil dead']
+
 best_student.rate_lecturer(cool_lecturer, 'Python', 10)
 
-
 cool_mentor.rate_hw(best_student, 'Python', 10)
 cool_mentor.rate_hw(best_student, 'Python', 10)
 cool_mentor.rate_hw(best_student, 'Python', 10)
 
-cool_mentor.rate_hw(best_student1, 'Python', 5)
-cool_mentor.rate_hw(best_student1, 'Python', 5)
-cool_mentor.rate_hw(best_student1, 'Python', 5)
+cool_mentor.rate_hw(best_student1, 'Python', 8)
+cool_mentor.rate_hw(best_student1, 'Python', 8)
+cool_mentor.rate_hw(best_student1, 'Python', 8)
 
-print(best_student > best_student1)
+print(avg_grade_by_course([best_student, best_student1], 'Python'))
+print(avg_grade_by_course([cool_lecturer, cool_lecturer1], 'Python'))
 
-
-print(cool_lecturer.grades)
-print(cool_lecturer.name, cool_lecturer.surname, cool_lecturer.courses_attached)
+print(cool_lecturer1)
+print(cool_lecturer1.courses_attached)
 print(best_student.grades)
+print(best_student.avg_grade())
 print(best_student)
