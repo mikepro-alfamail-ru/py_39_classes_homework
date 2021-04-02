@@ -10,22 +10,16 @@ class GradesCompare:
         self.grades = {}
 
     def __eq__(self, other):
-        return self.avg_grade() == other.avg_grade()
-
-    def __ne__(self, other):
-        return self.avg_grade() != other.avg_grade()
+        if isinstance(other, type(self)):
+            return self.avg_grade() == other.avg_grade()
 
     def __gt__(self, other):
-        return self.avg_grade() > other.avg_grade()
-
-    def __lt__(self, other):
-        return self.avg_grade() < other.avg_grade()
+        if isinstance(other, type(self)):
+            return self.avg_grade() > other.avg_grade()
 
     def __ge__(self, other):
-        return self.avg_grade() >= other.avg_grade()
-
-    def __le__(self, other):
-        return self.avg_grade() <= other.avg_grade()
+        if isinstance(other, type(self)):
+            return self.avg_grade() >= other.avg_grade()
 
     def avg_grade(self):
         avg = 0
@@ -43,8 +37,7 @@ class Student(GradesCompare):
         self.gender = gender
         self.finished_courses = []
         self.courses_in_progress = []
-        GradesCompare.__init__(self)
-#Не совсем уверен по поводу ^^^ такого вызова init родительского класса, но по другому не вышло...
+        super().__init__()
 
     def __str__(self):
         courses_in_progress_string = ' ,'.join(self.courses_in_progress)
@@ -77,7 +70,7 @@ class Mentor:
 
 class Lecturer(GradesCompare, Mentor):
     def __init__(self, *args):
-        GradesCompare.__init__(self)
+        super().__init__()
         Mentor.__init__(self, *args)
 
     def __cmp__(self, other):
@@ -159,3 +152,4 @@ print(cool_lecturer1.courses_attached)
 print(best_student.grades)
 print(best_student.avg_grade())
 print(best_student)
+print(cool_lecturer1 != cool_lecturer)
