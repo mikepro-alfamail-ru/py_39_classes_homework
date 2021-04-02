@@ -43,6 +43,7 @@ class Student(GradesCompare):
         self.finished_courses = []
         self.courses_in_progress = []
         GradesCompare.__init__(self)
+#Не совсем уверен по поводу ^^^ такого вызова init родительского класса, но по другому не вышло...
 
     def __str__(self):
         courses_in_progress_string = ' ,'.join(self.courses_in_progress)
@@ -55,7 +56,9 @@ class Student(GradesCompare):
                f'Завершенные курсы: {finished_courses_string}'
 
     def rate_lecturer(self, lecturer, course, grade):
-        if isinstance(lecturer, Lecturer) and course in lecturer.courses_attached and course in self.courses_in_progress:
+        if isinstance(lecturer, Lecturer) and \
+                course in lecturer.courses_attached and \
+                course in self.courses_in_progress:
             lecturer.grades.setdefault(course, [])
             lecturer.grades[course] += [grade]
         else:
@@ -92,7 +95,9 @@ class Lecturer(GradesCompare, Mentor):
 
 class Reviewer(Mentor):
     def rate_hw(self, student, course, grade):
-        if isinstance(student, Student) and course in self.courses_attached and course in student.courses_in_progress:
+        if isinstance(student, Student) and \
+                course in self.courses_attached and \
+                course in student.courses_in_progress:
             if course in student.grades:
                 student.grades[course] += [grade]
             else:
