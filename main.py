@@ -29,7 +29,6 @@ class GradesCompare:
         return avg
 
 
-
 class Student(GradesCompare):
     def __init__(self, name, surname, gender):
         self.name = name
@@ -59,13 +58,11 @@ class Student(GradesCompare):
             return 'Ошибка'
 
 
-
 class Mentor:
     def __init__(self, name, surname):
         self.name = name
         self.surname = surname
         self.courses_attached = []
-
 
 
 class Lecturer(GradesCompare, Mentor):
@@ -85,7 +82,6 @@ class Lecturer(GradesCompare, Mentor):
                f'Средняя оценка за лекции {self.avg_grade()}'
 
 
-
 class Reviewer(Mentor):
     def rate_hw(self, student, course, grade):
         if isinstance(student, Student) and \
@@ -103,7 +99,6 @@ class Reviewer(Mentor):
                    f'Фамилия: {self.surname}\n'
 
 
-
 def avg_grade_by_course(person_list, course):
     '''
     Так как структура словаря с оценками у лекторов и у студентов одинакова, решил сделать одну функцию
@@ -116,7 +111,6 @@ def avg_grade_by_course(person_list, course):
         return sum(grades_list) / len(grades_list)
     else:
         return 0
-
 
 
 best_student = Student('Ruoy', 'Eman', 'your_gender')
