@@ -144,12 +144,15 @@ cool_mentor.rate_hw(best_student1, 'Python', 8)
 cool_mentor.rate_hw(best_student1, 'Python', 8)
 cool_mentor.rate_hw(best_student1, 'Python', 8)
 
+print('Проверка рассчета средней оценки:')
 print(avg_grade_by_course([best_student, best_student1], 'Python'))
 print(avg_grade_by_course([cool_lecturer, cool_lecturer1], 'Python'))
+print()
 
+print('Проверка вывода объекта на печать:')
 print(cool_lecturer1)
-print(cool_lecturer1.courses_attached)
-print(best_student.grades)
-print(best_student.avg_grade())
 print(best_student)
+print()
+
+print('Проверка оператора сравнения для класса')
 print(cool_lecturer1 != cool_lecturer)
